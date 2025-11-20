@@ -3,6 +3,7 @@ var player = [];
 var comp = [];
 var level = 1;
 var gameStarted = false;
+var islock = false;
 function random() {
   return Math.floor(Math.random() * 4);
 }
@@ -17,6 +18,7 @@ function gameover() {
 }
 function turn() {
   player = [];
+  islock = true;
   console.log("playe" + " " + player);
   if (comp.length < level) {
     let num = random();
@@ -24,6 +26,7 @@ function turn() {
     $("#" + color).addClass("pressed");
     setTimeout(() => {
       $("#" + color).removeClass("pressed");
+      islock = false;
     }, 200);
     comp.push(color);
   }
@@ -32,11 +35,11 @@ function turn() {
 function playerround() {
   $(".btn").off("click");
   $(".btn").on("click", function (e) {
+    if (islock) return;
     var id = e.target.id;
     player.push(id);
     console.log("playe" + "" + player);
     $("#" + id).addClass("pressed");
-    $("#" + id).play();
     setTimeout(() => {
       $("#" + id).removeClass("pressed");
     }, 300);
@@ -44,6 +47,7 @@ function playerround() {
       $("body").addClass("game-over");
       alert("you lost");
       reset();
+      return;
     }
     if (player.length == comp.length) {
       level++;
