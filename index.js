@@ -36,13 +36,14 @@ function comp() {
     islock = true; // locking player click untill end of comp
     player = [];
     var choice = color[random()]; // using random function to randomized comp color pick
-    compchoice.push(choice); //pushing random choice to comp arry
-    $("#" + choice).addClass("pressed");
+
+    compchoice.push(choice); //pushing color choice to comp arry
     sound(choice);
+    $("#" + choice).addClass("pressed");
     setTimeout(() => {
       islock = false; //after comp turn end relesing player click
       $("#" + choice).removeClass("pressed");
-    }, 600);
+    }, 500);
   }
 }
 
@@ -53,7 +54,6 @@ function playerturn() {
     //lissing to player click
     if (islock) return; // preventing click if comp did not show its choice
     let id = e.target.id;
-
     $("#" + id).addClass("pressed");
     sound(id);
     setTimeout(() => {
@@ -68,8 +68,10 @@ function playerturn() {
     }
     if (player.length == compchoice.length) {
       //if playerr arry match and (!IsEnd) enter next level
-      level++; //next level
-      Startlogic(); //start next round
+      setTimeout(() => {
+        level++; //next level
+        Startlogic(); //start next round
+      }, 700);
     }
   });
 }
@@ -80,7 +82,7 @@ function reset() {
     //removing game over and changin h1 back to be ready for next game
     $("body").removeClass("game-over");
     $("h1").html("Press a to start");
-  }, 500);
+  }, 700);
   player = [];
   level = 1;
   gamestart = false;
