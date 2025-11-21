@@ -8,7 +8,7 @@ var islock = false;
 
 // wait for keypress to start the game
 $("body").on("keypress", function (e) {
-  if ((e.key == "a" || e.key == "A") && !gamestart) {
+  if ((e.key == "a" || e.key == "A" || e.key == "ש") && !gamestart) {
     gamestart = true;
     Startlogic();
   }
