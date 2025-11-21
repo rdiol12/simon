@@ -6,6 +6,11 @@ var level = 1;
 var gamestart = false;
 var islock = false;
 
+//addingg sound by click press
+function sound(btn) {
+  var audio = new Audio("sounds/" + btn + ".mp3"); // new sound object
+  audio.play();
+}
 // wait for keypress to start the game
 $("body").on("keypress", function (e) {
   if ((e.key == "a" || e.key == "A" || e.key == "ש") && !gamestart) {
@@ -14,7 +19,7 @@ $("body").on("keypress", function (e) {
   }
 });
 
-//function cheaking if player lost
+//checking if player lost by comparing player arry to comp arry
 function IsEnd() {
   for (let i = 0; i < player.length; i++)
     if (player[i] != compchoice[i]) return true;
@@ -33,11 +38,11 @@ function comp() {
     var choice = color[random()]; // using random function to randomized comp color pick
     compchoice.push(choice); //pushing random choice to comp arry
     $("#" + choice).addClass("pressed");
+    sound(choice);
     setTimeout(() => {
-      //using time out to remove pressed 'effect'
       islock = false; //after comp turn end relesing player click
       $("#" + choice).removeClass("pressed");
-    }, 1000);
+    }, 600);
   }
 }
 
@@ -48,10 +53,12 @@ function playerturn() {
     //lissing to player click
     if (islock) return; // preventing click if comp did not show its choice
     let id = e.target.id;
-    $("id").addClass("pressed");
+
+    $("#" + id).addClass("pressed");
+    sound(id);
     setTimeout(() => {
-      $("id").removeClass("pressed");
-    }, 1000);
+      $("#" + id).removeClass("pressed");
+    }, 500);
     player.push(id); //pushing player choice into arry
     if (IsEnd()) {
       //if player lost doing reset untill next  key press
