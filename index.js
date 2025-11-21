@@ -17,21 +17,28 @@ function gameover() {
   return false;
 }
 function turn() {
-  player = [];
+  if (!gameStarted) return;
+
   islock = true;
-  console.log("playe" + " " + player);
-  if (comp.length < level) {
-    let num = random();
-    var color = colors[num];
-    $("#" + color).addClass("pressed");
-    setTimeout(() => {
-      $("#" + color).removeClass("pressed");
-      islock = false;
-    }, 200);
-    comp.push(color);
-  }
-  console.log("comp" + " " + comp);
+  player = [];
+
+  setTimeout(() => {
+    if (comp.length < level) {
+      let num = random();
+      var color = colors[num];
+
+      $("#" + color).addClass("pressed");
+
+      setTimeout(() => {
+        $("#" + color).removeClass("pressed");
+        islock = false;
+      }, 300);
+
+      comp.push(color);
+    }
+  }, 500);
 }
+
 function playerround() {
   $(".btn").off("click");
   $(".btn").on("click", function (e) {
@@ -45,32 +52,32 @@ function playerround() {
     }, 300);
     if (gameover()) {
       $("body").addClass("game-over");
-      alert("you lost");
+      $("h1").html("you lost");
       reset();
-      return;
     }
-    if (player.length == comp.length) {
+    if (player.length == comp.length && gameStarted) {
       level++;
-      game();
+      setTimeout(game, 300);
     }
   });
 }
 function reset() {
+  $("body").off("keypress");
   player = [];
   comp = [];
   level = 1;
   gameStarted = false;
   setTimeout(() => {
     $("body").removeClass("game-over");
+    $("h1").html("Press a to start");
   }, 400);
-
   game();
 }
 function game() {
   turn();
   playerround();
 }
-
+$("body").off("keypress");
 $("body").on("keypress", function (e) {
   if ((e.key === "a" || e.key === "A") && !gameStarted) {
     gameStarted = true;

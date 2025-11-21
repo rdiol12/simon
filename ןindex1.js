@@ -1,82 +1,70 @@
-var colors = ["green", "red", "yellow", "blue"];
-var historyColor = [];
-var client = [];
-var start = false;
+var compchoice = [];
+var color = ["red", "green", "yellow", "blue"];
+var player = [];
 var level = 1;
-var i = 0;
+var gamestart = false;
+var islock = false;
+$("body").on("keypress", function (e) {
+  if ((e.key == "a" || e.key == "A") && !gamestart) {
+    gamestart = true;
+    Startlogic();
+  }
+});
+function IsEnd() {
+  for (let i = 0; i < player.length; i++)
+    if (player[i] != compchoice[i]) return true;
+  return false;
+}
 function random() {
   return Math.floor(Math.random() * 4);
 }
-function reset() {
-  historyColor = [];
-  client = [];
-  start = false;
-  level = 1;
-  i = 0;
-  $("h1").text("Press A Key to Start");
+function comp() {
+  if (compchoice.length < level && gamestart) {
+    islock = true;
+    player = [];
+    var choice = color[random()];
+    compchoice.push(choice);
+    $("#" + choice).addClass("pressed");
+    setTimeout(() => {
+      islock = false;
+      $("#" + choice).removeClass("pressed");
+    }, 1000);
+  }
 }
-
-function checkKeyPress() {
-  $("body").keypress(() => {
-    if (!start) {
-      start = true;
-      $("h1").text("level : " + level);
-      newColor();
+function playerturn() {
+  $(".btn").off();
+  $(".btn").on("click", function (e) {
+    if (islock) return;
+    let id = e.target.id;
+    $("id").addClass("pressed");
+    setTimeout(() => {
+      $("id").removeClass("pressed");
+    }, 1000);
+    player.push(id);
+    if (IsEnd()) {
+      $("body").addClass("game-over");
+      $("h1").html("you lost");
+      reset();
+    }
+    if (player.length == compchoice.length) {
+      level++;
+      Startlogic();
     }
   });
 }
-function newColor() {
-  if (start) {
-    let rand = random();
-    let color = colors[rand];
-    historyColor.push(color);
-    $("#" + color)
-      .fadeOut(100)
-      .fadeIn(100);
-    console.log(color);
-    console.log(historyColor);
-    i = 0;
-    client = [];
-    clientTurn();
-  }
+function reset() {
+  setTimeout(() => {
+    $("body").removeClass("game-over");
+    $("h1").html("Press a to start");
+  }, 500);
+  player = [];
+  level = 1;
+  gamestart = false;
+  islock = false;
+  compchoice = [];
+  return;
 }
-function checkTurn(client = []) {
-  // "red" "green" "red"
-
-  if (client.length === historyColor.length) {
-    if (client[i] !== historyColor[i]) {
-      alert("worng !");
-      reset();
-    } else {
-      level++;
-      $("h1").text("level : " + level);
-      newColor();
-    }
-    i++;
-  } else {
-    if (client[client.length - 1] !== historyColor[client.length - 1]) {
-      alert("worng !");
-      reset();
-    }
-    clientTurn();
-  }
+function Startlogic() {
+  comp();
+  playerturn();
 }
-
-function clientTurn() {
-  if (start) {
-    let pressed = false;
-    $(".btn").on("click", (e) => {
-      if (!pressed) {
-        pressed = true;
-        client.push(e.target.id);
-        $("#" + e.target.id)
-          .fadeOut(100)
-          .fadeIn(100);
-        console.log(e.target.id);
-        checkTurn(client);
-      }
-    });
-  }
-}
-
-checkKeyPress();
