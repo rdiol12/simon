@@ -91,6 +91,7 @@ function reset() {
 
 //controling fucnction game logic
 function Startlogic() {
+  $("h1").html("level " + String(level));
   comp();
   playerturn();
 }
